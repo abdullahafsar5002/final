@@ -1,6 +1,6 @@
 // api/chat.js
 export default async function handler(req, res) {
-    // Standard headers allowing your frontend to speak with this file safely
+    // Allows your frontend to talk to this backend file safely
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
@@ -19,11 +19,11 @@ export default async function handler(req, res) {
         const apiKey = process.env.GEMINI_API_KEY;
 
         if (!apiKey) {
-            return res.status(200).json({ reply: "Setup Error: API Key is missing inside Vercel Environment Variables." });
+            return res.status(500).json({ reply: "API Key missing in Vercel settings." });
         }
 
-        // FIX: Using the universally stable gemini-1.5-flash engine endpoint
-        const apiURL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        // Send the user message to Google's Gemini AI engine
+        const apiURL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
         
         const response = await fetch(apiURL, {
             method: 'POST',
@@ -42,23 +42,11 @@ export default async function handler(req, res) {
         });
 
         const data = await response.json();
-
-        // DEBUGGING: If Google rejects the key or endpoint, show the exact error message in the chat
-        if (data.error) {
-            return res.status(200).json({ 
-                reply: `Google API Error: ${data.error.message} (Status Code: ${data.error.code})` 
-            });
-        }
-
-        const aiReply = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        
-        if (!aiReply) {
-            return res.status(200).json({ reply: "Google AI responded, but didn't return text content. Please try again." });
-        }
+        const aiReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "I couldn't quite process that. Can you rephrase your question?";
         
         return res.status(200).json({ reply: aiReply });
 
     } catch (error) {
-        return res.status(500).json({ reply: `Server connection failure: ${error.message}` });
+        return res.status(500).json({ reply: "Server connection issue. Please try again." });
     }
 }
