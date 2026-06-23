@@ -178,27 +178,121 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatInput = document.getElementById('chatInput');
     const chatBody = document.getElementById('chatBody');
 
-    // Toggle showing and hiding chat panel window
-    chatToggle.addEventListener('click', () => {
+    let isDragging = false;
+    let hasMoved = false;
+    let startX, startY, initialX, initialY;
+
+    // --- DRAG AND DROP ENGINE (Mouse & Touch) ---
+    
+    // Desktop Mouse Events
+    chatToggle.addEventListener('mousedown', dragStart);
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', dragEnd);
+
+    // Mobile Touch Events
+    chatToggle.addEventListener('touchstart', dragStart, { passive: false });
+    document.addEventListener('touchmove', drag, { passive: false });
+    document.addEventListener('touchend', dragEnd);
+
+    function dragStart(e) {
+        // Prevent default screen scrolling when grabbing on mobile
+        if (e.type === 'touchstart') {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        } else {
+            startX = e.clientX;
+            startY = e.clientY;
+        }
+
+        // Get current position coordinates
+        const rect = chatToggle.getBoundingClientRect();
+        initialX = rect.left;
+        initialY = rect.top;
+
+        isDragging = true;
+        hasMoved = false;
+    }
+
+    function drag(e) {
+        if (!isDragging) return;
+        
+        let currentX, currentY;
+        if (e.type === 'touchmove') {
+            e.preventDefault(); // Stop mobile page elastic scrolling while dragging
+            currentX = e.touches[0].clientX;
+            currentY = e.touches[0].clientY;
+        } else {
+            currentX = e.clientX;
+            currentY = e.clientY;
+        }
+
+        const dx = currentX - startX;
+        const dy = currentY - startY;
+
+        // If moved more than 5 pixels, consider it an intentional drag movement
+        if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+            hasMoved = true;
+        }
+
+        // Calculate new boundaries
+        let newLeft = initialX + dx;
+        let newTop = initialY + dy;
+
+        // Keep the button within the visible viewport bounds
+        const padding = 10;
+        newLeft = Math.max(padding, Math.min(window.innerWidth - chatToggle.offsetWidth - padding, newLeft));
+        newTop = Math.max(padding, Math.min(window.innerHeight - chatToggle.offsetHeight - padding, newTop));
+
+        // Apply new spatial coordinates instantly
+        chatToggle.style.left = `${newLeft}px`;
+        chatToggle.style.top = `${newTop}px`;
+        chatToggle.style.bottom = 'auto';
+        chatToggle.style.right = 'auto';
+
+        // Dynamically snap the chat window right above the moving button position
+        updateWindowPosition(newLeft, newTop);
+    }
+
+    function dragEnd() {
+        isDragging = false;
+    }
+
+    // Toggle panel view (Only runs if the button was clicked, NOT dragged)
+    chatToggle.addEventListener('click', (e) => {
+        if (hasMoved) {
+            e.preventDefault();
+            return; // Prevent opening if they were just moving it
+        }
+        
         chatWindow.classList.toggle('open');
-        if (chatWindow.classList.contains('open')) chatInput.focus();
+        if (chatWindow.classList.contains('open')) {
+            const rect = chatToggle.getBoundingClientRect();
+            updateWindowPosition(rect.left, rect.top);
+            chatInput.focus();
+        }
     });
 
     chatClose.addEventListener('click', () => {
         chatWindow.classList.remove('open');
     });
 
-    // Form Submission Actions
+    function updateWindowPosition(btnLeft, btnTop) {
+        // Keeps window pinned perfectly relative to the button
+        chatWindow.style.left = `${Math.min(window.innerWidth - chatWindow.offsetWidth - 20, Math.max(20, btnLeft - 150))}px`;
+        chatWindow.style.top = `${btnTop - chatWindow.offsetHeight - 15}px`;
+        chatWindow.style.bottom = 'auto';
+        chatWindow.style.right = 'auto';
+    }
+
+    // --- AI CHAT ENGINE CONNECTION ---
     chatForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const userText = chatInput.value.trim();
         if (!userText) return;
 
-        // Display user message bubble
         appendBubble(userText, 'user-bubble');
         chatInput.value = '';
 
-        // Add a temporary loading text item
         const loadingBubble = document.createElement('div');
         loadingBubble.className = 'chat-bubble bot-bubble';
         loadingBubble.innerHTML = `<p style="color: #777; font-style: italic;">Thinking...</p>`;
@@ -206,7 +300,6 @@ document.addEventListener('DOMContentLoaded', () => {
         chatBody.scrollTop = chatBody.scrollHeight;
 
         try {
-            // Call our serverless function directly
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -214,7 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const data = await response.json();
-            loadingBubble.remove(); // Remove thinking message
+            loadingBubble.remove();
             appendBubble(data.reply, 'bot-bubble');
 
         } catch (error) {
@@ -228,6 +321,6 @@ document.addEventListener('DOMContentLoaded', () => {
         div.className = `chat-bubble ${className}`;
         div.innerHTML = `<p>${text}</p>`;
         chatBody.appendChild(div);
-        chatBody.scrollTop = chatBody.scrollHeight; // Force scroll to bottom
+        chatBody.scrollTop = chatBody.scrollHeight;
     }
 });
