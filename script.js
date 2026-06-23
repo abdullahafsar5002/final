@@ -170,3 +170,64 @@
         });
     }
 })();
+document.addEventListener('DOMContentLoaded', () => {
+    const chatToggle = document.getElementById('chatToggle');
+    const chatWindow = document.getElementById('chatWindow');
+    const chatClose = document.getElementById('chatClose');
+    const chatForm = document.getElementById('chatForm');
+    const chatInput = document.getElementById('chatInput');
+    const chatBody = document.getElementById('chatBody');
+
+    // Toggle showing and hiding chat panel window
+    chatToggle.addEventListener('click', () => {
+        chatWindow.classList.toggle('open');
+        if (chatWindow.classList.contains('open')) chatInput.focus();
+    });
+
+    chatClose.addEventListener('click', () => {
+        chatWindow.classList.remove('open');
+    });
+
+    // Form Submission Actions
+    chatForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const userText = chatInput.value.trim();
+        if (!userText) return;
+
+        // Display user message bubble
+        appendBubble(userText, 'user-bubble');
+        chatInput.value = '';
+
+        // Add a temporary loading text item
+        const loadingBubble = document.createElement('div');
+        loadingBubble.className = 'chat-bubble bot-bubble';
+        loadingBubble.innerHTML = `<p style="color: #777; font-style: italic;">Thinking...</p>`;
+        chatBody.appendChild(loadingBubble);
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        try {
+            // Call our serverless function directly
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userText })
+            });
+
+            const data = await response.json();
+            loadingBubble.remove(); // Remove thinking message
+            appendBubble(data.reply, 'bot-bubble');
+
+        } catch (error) {
+            loadingBubble.remove();
+            appendBubble("Sorry, I had trouble processing that request. Please try again.", 'bot-bubble');
+        }
+    });
+
+    function appendBubble(text, className) {
+        const div = document.createElement('div');
+        div.className = `chat-bubble ${className}`;
+        div.innerHTML = `<p>${text}</p>`;
+        chatBody.appendChild(div);
+        chatBody.scrollTop = chatBody.scrollHeight; // Force scroll to bottom
+    }
+});
