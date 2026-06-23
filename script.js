@@ -177,6 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatForm = document.getElementById('chatForm');
     const chatInput = document.getElementById('chatInput');
     const chatBody = document.getElementById('chatBody');
+    const chatSubmitBtn = chatForm.querySelector('button');
 
     let isDragging = false;
     let hasMoved = false;
@@ -266,26 +267,44 @@ document.addEventListener('DOMContentLoaded', () => {
         chatWindow.style.right = 'auto';
     }
 
-    // Markdown Parser Text Converter
     function formatAIResponse(rawText) {
         return rawText
-            .replace(/\*\*(.*?)\*\//g, '<strong>$1</strong>')
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
             .replace(/\*(.*?)\*/g, '<em>$1</em>')
             .replace(/\n/g, '<br>');
     }
 
-    // --- AI COMMUNICATION HANDLING ---
+    // --- AI HANDLING WITH INTEGRATED CACHE & THROTTLING ---
     chatForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const userText = chatInput.value.trim();
         if (!userText) return;
 
+        // 1. UI THROTTLING (Disable fields to lock out spam clicking)
+        chatInput.disabled = true;
+        if (chatSubmitBtn) chatSubmitBtn.disabled = true;
+
         appendBubble(userText, 'user-bubble', false);
         chatInput.value = '';
 
-        // LOCAL DEV GUARD: Detects if running locally via file layout
+        const cacheKey = `chat_cache_${userText.toLowerCase()}`;
+
+        // 2. SMART CACHING (Check memory for repeated phrases)
+        if (sessionStorage.getItem(cacheKey)) {
+            const cachedReply = sessionStorage.getItem(cacheKey);
+            appendBubble(cachedReply, 'bot-bubble', true);
+            
+            // Release UI lock immediately
+            chatInput.disabled = false;
+            if (chatSubmitBtn) chatSubmitBtn.disabled = false;
+            chatInput.focus();
+            return;
+        }
+
         if (window.location.protocol === 'file:') {
-            appendBubble("⚠️ <strong>Local Testing Error:</strong> You opened index.html directly as a file. Your local computer cannot run serverless API functions. To test the chatbot, you must upload these changes to GitHub and view them on your live Vercel domain link!", 'bot-bubble', false);
+            appendBubble("⚠️ Local Testing Protocol active.", 'bot-bubble', false);
+            chatInput.disabled = false;
+            if (chatSubmitBtn) chatSubmitBtn.disabled = false;
             return;
         }
 
@@ -304,12 +323,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
             loadingBubble.remove();
+
+            // Store successful text outputs in the local cache
+            if (data.reply && !data.reply.includes("🛑") && !data.reply.includes("⚠️")) {
+                sessionStorage.setItem(cacheKey, data.reply);
+            }
+
             appendBubble(data.reply, 'bot-bubble', true);
 
         } catch (error) {
             loadingBubble.remove();
-            appendBubble(`Error reaching backend: ${error.message}. Check your browser console log for deeper details.`, 'bot-bubble', false);
-            console.error("Chatbot Fetch Error:", error);
+            appendBubble(`Failed to reach api service: ${error.message}`, 'bot-bubble', false);
+        } finally {
+            // 3. ALWAYS UNLOCK UI (Runs whether fetch succeeds or fails)
+            chatInput.disabled = false;
+            if (chatSubmitBtn) chatSubmitBtn.disabled = false;
+            chatInput.focus();
         }
     });
 
