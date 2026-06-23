@@ -1,6 +1,5 @@
 // api/chat.js
 export default async function handler(req, res) {
-    // Enable standard CORS headers so your frontend can communicate securely
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
@@ -16,35 +15,48 @@ export default async function handler(req, res) {
 
     try {
         const { message } = req.body;
-        const apiKey = process.env.GEMINI_API_KEY;
+        const primaryKey = process.env.GEMINI_API_KEY;
+        const backupKey = process.env.GEMINI_API_KEY_BACKUP;
 
-        if (!apiKey) {
+        if (!primaryKey) {
             return res.status(200).json({ 
-                reply: "⚠️ Backend Config Error: The `GEMINI_API_KEY` environment variable is missing in your Vercel project settings." 
+                reply: "⚠️ Backend Config Error: The primary `GEMINI_API_KEY` is missing in Vercel settings." 
             });
         }
 
-        // UPGRADED: Changed model from deprecated 'gemini-1.5-flash' to stable 'gemini-2.5-flash'
-        const apiURL = `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
-        
-        const response = await fetch(apiURL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: `You are the official helpful AI assistant for the Toruk Makto Golf League. 
-                               Keep your responses professional, concise, and focused on golf or league support.
-                               
-                               User question: ${message}`
+        // Reusable function to execute API calls
+        const callGemini = async (apiKey) => {
+            const apiURL = `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+            const response = await fetch(apiURL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: `You are the official helpful AI assistant for the Toruk Makto Golf League. 
+                                   Keep your responses professional, concise, and focused on golf or league support.
+                                   
+                                   User question: ${message}`
+                        }]
                     }]
-                }]
-            })
-        });
+                })
+            });
+            return await response.json();
+        };
 
-        const data = await response.json();
+        // Execution Step 1: Run with primary key
+        let data = await callGemini(primaryKey);
 
-        // Intercept error responses from Google's servers
+        // Execution Step 2: KEY ROTATION
+        // If primary key returns a 429 rate limit error, instantly switch to the backup key
+        if (data.error && (data.error.code === 429 || data.error.status === 'RESOURCE_EXHAUSTED')) {
+            if (backupKey) {
+                console.warn("Primary API key quota hit. Rotating to backup API key...");
+                data = await callGemini(backupKey);
+            }
+        }
+
+        // Handle structural API errors
         if (data.error) {
             return res.status(200).json({ 
                 reply: `🛑 Google AI API Error: ${data.error.message} (Code: ${data.error.code})` 
@@ -52,14 +64,7 @@ export default async function handler(req, res) {
         }
 
         const aiReply = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        
-        if (!aiReply) {
-            return res.status(200).json({ 
-                reply: "Received an empty response from Google AI. Please try rephrasing your sentence." 
-            });
-        }
-        
-        return res.status(200).json({ reply: aiReply });
+        return res.status(200).json({ reply: aiReply || "Received an empty response from Google AI." });
 
     } catch (error) {
         return res.status(500).json({ reply: `❌ Server Connection Error: ${error.message}` });
