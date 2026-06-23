@@ -8,6 +8,33 @@
     <link rel="icon" type="image/jpeg" href="logo toruk.png">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* CSS to style Formspree's native error messaging layout cleanly */
+        [data-fs-error] {
+            color: #ef4444;
+            font-size: 0.85rem;
+            display: block;
+            margin-top: 0.25rem;
+            font-weight: 600;
+        }
+        /* Custom formatting rules for Formspree global success/error messages */
+        .fs-status-box {
+            font-weight: 600;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+        }
+        [data-fs-success]:not(:empty) {
+            background-color: #ecfdf5;
+            color: var(--accent-color, #10b981);
+            border: 1px solid #a7f3d0;
+        }
+        [data-fs-error="form"]:not(:empty) {
+            background-color: #fef2f2;
+            color: #ef4444;
+            border: 1px solid #fca5a5;
+        }
+    </style>
 </head>
 <body>
 
@@ -52,30 +79,39 @@
             <div class="contact-wrapper">
                 <div class="contact-form">
                     <h3>Team Registration & Inquiries</h3>
+                    
+                    <!-- Global Notification Windows Built to Intercept API Returns -->
+                    <div data-fs-success class="fs-status-box"></div>
+                    <div data-fs-error="form" class="fs-status-box"></div>
+
                     <form id="contactForm">
                         <div class="form-group">
                             <label for="name">Full Name *</label>
-                            <input type="text" id="name" name="name" required>
+                            <input type="text" id="name" name="name" required data-fs-field>
+                            <span data-fs-error="name"></span>
                         </div>
 
                         <div class="form-group">
                             <label for="email">Email Address *</label>
-                            <input type="email" id="email" name="email" required>
+                            <input type="email" id="email" name="email" required data-fs-field>
+                            <span data-fs-error="email"></span>
                         </div>
 
                         <div class="form-group">
                             <label for="phone">Phone Number *</label>
-                            <input type="tel" id="phone" name="phone" required>
+                            <input type="tel" id="phone" name="phone" required data-fs-field>
+                            <span data-fs-error="phone"></span>
                         </div>
 
                         <div class="form-group">
                             <label for="teamName">Team/Company Name *</label>
-                            <input type="text" id="teamName" name="teamName" required>
+                            <input type="text" id="teamName" name="teamName" required data-fs-field>
+                            <span data-fs-error="teamName"></span>
                         </div>
 
                         <div class="form-group">
                             <label for="inquiryType">Inquiry Type *</label>
-                            <select id="inquiryType" name="inquiryType" required>
+                            <select id="inquiryType" name="inquiryType" required data-fs-field>
                                 <option value="">Select an option</option>
                                 <option value="team-registration">Team Registration</option>
                                 <option value="sponsorship">Sponsorship Inquiry</option>
@@ -83,16 +119,17 @@
                                 <option value="venue">Venue Partnership</option>
                                 <option value="general">General Inquiry</option>
                             </select>
+                            <span data-fs-error="inquiryType"></span>
                         </div>
 
                         <div class="form-group">
                             <label for="message">Message *</label>
-                            <textarea id="message" name="message" rows="6" required></textarea>
+                            <textarea id="message" name="message" rows="6" required data-fs-field></textarea>
+                            <span data-fs-error="message"></span>
                         </div>
 
-                        <button type="submit" class="submit-btn">Send Inquiry</button>
+                        <button type="submit" class="submit-btn" data-fs-submit-btn>Send Inquiry</button>
                     </form>
-                    <div id="formMessage" style="margin-top: 1rem; display: none;"></div>
                 </div>
 
                 <div class="contact-info">
@@ -163,16 +200,12 @@
     </div>
 
     <script src="script.js"></script>
+    
+    <!-- Formspree Declarative CDN Controller Scripts Bundle -->
     <script>
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formMessage = document.getElementById('formMessage');
-            formMessage.textContent = '✓ Thank you for your inquiry! We will get back to you shortly.';
-            formMessage.style.color = 'var(--accent-color)';
-            formMessage.style.display = 'block';
-            this.reset();
-            setTimeout(() => formMessage.style.display = 'none', 4000);
-        });
+        window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
+        formspree('initForm', { formElement: '#contactForm', formId: 'meebookg' });
     </script>
+    <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 </body>
 </html>
