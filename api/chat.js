@@ -1,6 +1,5 @@
 // api/chat.js
 export default async function handler(req, res) {
-    // Enable CORS headers so your frontend can communicate securely
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
@@ -20,12 +19,12 @@ export default async function handler(req, res) {
 
         if (!apiKey) {
             return res.status(200).json({ 
-                reply: "⚠️ Backend Config Error: The `GEMINI_API_KEY` is missing in Vercel Environment Variables." 
+                reply: "⚠️ Backend Config Error: GEMINI_API_KEY is missing from Vercel settings." 
             });
         }
 
-        // Using the highly stable Gemini 1.5 Flash API endpoint
-        const apiURL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        // Production-stable v1 endpoint with lowercase model name
+        const apiURL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
         
         const response = await fetch(apiURL, {
             method: 'POST',
@@ -34,7 +33,7 @@ export default async function handler(req, res) {
                 contents: [{
                     parts: [{
                         text: `You are the official helpful AI assistant for the Toruk Makto Golf League. 
-                               Keep your responses friendly, concise, and focused on golf or league support.
+                               Be professional, concise, and polite.
                                
                                User question: ${message}`
                     }]
@@ -44,7 +43,6 @@ export default async function handler(req, res) {
 
         const data = await response.json();
 
-        // Catch errors sent back directly from Google's servers
         if (data.error) {
             return res.status(200).json({ 
                 reply: `🛑 Google AI API Error: ${data.error.message} (Code: ${data.error.code})` 
@@ -52,16 +50,9 @@ export default async function handler(req, res) {
         }
 
         const aiReply = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        
-        if (!aiReply) {
-            return res.status(200).json({ 
-                reply: "Empty response received from Google AI. Please try rephrasing your sentence." 
-            });
-        }
-        
-        return res.status(200).json({ reply: aiReply });
+        return res.status(200).json({ reply: aiReply || "No text returned from AI." });
 
     } catch (error) {
-        return res.status(500).json({ reply: `❌ Server Crash Error: ${error.message}` });
+        return res.status(500).json({ reply: `❌ Server Error: ${error.message}` });
     }
 }
