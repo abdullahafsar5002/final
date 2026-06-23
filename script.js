@@ -181,21 +181,18 @@ document.addEventListener('DOMContentLoaded', () => {
     let isDragging = false;
     let hasMoved = false;
     let startX, startY, initialX, initialY;
+    let dragThreshold = 15; 
 
-    // --- DRAG AND DROP ENGINE (Mouse & Touch) ---
-    
-    // Desktop Mouse Events
+    // --- DRAG ENGINE ---
     chatToggle.addEventListener('mousedown', dragStart);
     document.addEventListener('mousemove', drag);
     document.addEventListener('mouseup', dragEnd);
 
-    // Mobile Touch Events
     chatToggle.addEventListener('touchstart', dragStart, { passive: false });
     document.addEventListener('touchmove', drag, { passive: false });
     document.addEventListener('touchend', dragEnd);
 
     function dragStart(e) {
-        // Prevent default screen scrolling when grabbing on mobile
         if (e.type === 'touchstart') {
             startX = e.touches[0].clientX;
             startY = e.touches[0].clientY;
@@ -203,22 +200,18 @@ document.addEventListener('DOMContentLoaded', () => {
             startX = e.clientX;
             startY = e.clientY;
         }
-
-        // Get current position coordinates
         const rect = chatToggle.getBoundingClientRect();
         initialX = rect.left;
         initialY = rect.top;
-
         isDragging = true;
         hasMoved = false;
     }
 
     function drag(e) {
         if (!isDragging) return;
-        
         let currentX, currentY;
         if (e.type === 'touchmove') {
-            e.preventDefault(); // Stop mobile page elastic scrolling while dragging
+            e.preventDefault(); 
             currentX = e.touches[0].clientX;
             currentY = e.touches[0].clientY;
         } else {
@@ -229,41 +222,29 @@ document.addEventListener('DOMContentLoaded', () => {
         const dx = currentX - startX;
         const dy = currentY - startY;
 
-        // If moved more than 5 pixels, consider it an intentional drag movement
-        if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+        if (Math.abs(dx) > dragThreshold || Math.abs(dy) > dragThreshold) {
             hasMoved = true;
         }
 
-        // Calculate new boundaries
-        let newLeft = initialX + dx;
-        let newTop = initialY + dy;
-
-        // Keep the button within the visible viewport bounds
-        const padding = 10;
-        newLeft = Math.max(padding, Math.min(window.innerWidth - chatToggle.offsetWidth - padding, newLeft));
-        newTop = Math.max(padding, Math.min(window.innerHeight - chatToggle.offsetHeight - padding, newTop));
-
-        // Apply new spatial coordinates instantly
-        chatToggle.style.left = `${newLeft}px`;
-        chatToggle.style.top = `${newTop}px`;
-        chatToggle.style.bottom = 'auto';
-        chatToggle.style.right = 'auto';
-
-        // Dynamically snap the chat window right above the moving button position
-        updateWindowPosition(newLeft, newTop);
-    }
-
-    function dragEnd() {
-        isDragging = false;
-    }
-
-    // Toggle panel view (Only runs if the button was clicked, NOT dragged)
-    chatToggle.addEventListener('click', (e) => {
         if (hasMoved) {
-            e.preventDefault();
-            return; // Prevent opening if they were just moving it
+            let newLeft = initialX + dx;
+            let newTop = initialY + dy;
+            const padding = 15;
+            newLeft = Math.max(padding, Math.min(window.innerWidth - chatToggle.offsetWidth - padding, newLeft));
+            newTop = Math.max(padding, Math.min(window.innerHeight - chatToggle.offsetHeight - padding, newTop));
+
+            chatToggle.style.left = `${newLeft}px`;
+            chatToggle.style.top = `${newTop}px`;
+            chatToggle.style.bottom = 'auto';
+            chatToggle.style.right = 'auto';
+            updateWindowPosition(newLeft, newTop);
         }
-        
+    }
+
+    function dragEnd() { isDragging = false; }
+
+    chatToggle.addEventListener('click', (e) => {
+        if (hasMoved) { e.preventDefault(); return; }
         chatWindow.classList.toggle('open');
         if (chatWindow.classList.contains('open')) {
             const rect = chatToggle.getBoundingClientRect();
@@ -272,26 +253,41 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    chatClose.addEventListener('click', () => {
-        chatWindow.classList.remove('open');
-    });
+    chatClose.addEventListener('click', () => { chatWindow.classList.remove('open'); });
 
     function updateWindowPosition(btnLeft, btnTop) {
-        // Keeps window pinned perfectly relative to the button
-        chatWindow.style.left = `${Math.min(window.innerWidth - chatWindow.offsetWidth - 20, Math.max(20, btnLeft - 150))}px`;
-        chatWindow.style.top = `${btnTop - chatWindow.offsetHeight - 15}px`;
+        let targetLeft = btnLeft - 150;
+        let targetTop = btnTop - chatWindow.offsetHeight - 15;
+        targetLeft = Math.max(10, Math.min(window.innerWidth - chatWindow.offsetWidth - 10, targetLeft));
+        if (targetTop < 10) { targetTop = btnTop + chatToggle.offsetHeight + 15; }
+        chatWindow.style.left = `${targetLeft}px`;
+        chatWindow.style.top = `${targetTop}px`;
         chatWindow.style.bottom = 'auto';
         chatWindow.style.right = 'auto';
     }
 
-    // --- AI CHAT ENGINE CONNECTION ---
+    // Markdown Parser Text Converter
+    function formatAIResponse(rawText) {
+        return rawText
+            .replace(/\*\*(.*?)\*\//g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/\n/g, '<br>');
+    }
+
+    // --- AI COMMUNICATION HANDLING ---
     chatForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const userText = chatInput.value.trim();
         if (!userText) return;
 
-        appendBubble(userText, 'user-bubble');
+        appendBubble(userText, 'user-bubble', false);
         chatInput.value = '';
+
+        // LOCAL DEV GUARD: Detects if running locally via file layout
+        if (window.location.protocol === 'file:') {
+            appendBubble("⚠️ <strong>Local Testing Error:</strong> You opened index.html directly as a file. Your local computer cannot run serverless API functions. To test the chatbot, you must upload these changes to GitHub and view them on your live Vercel domain link!", 'bot-bubble', false);
+            return;
+        }
 
         const loadingBubble = document.createElement('div');
         loadingBubble.className = 'chat-bubble bot-bubble';
@@ -308,18 +304,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
             loadingBubble.remove();
-            appendBubble(data.reply, 'bot-bubble');
+            appendBubble(data.reply, 'bot-bubble', true);
 
         } catch (error) {
             loadingBubble.remove();
-            appendBubble("Sorry, I had trouble processing that request. Please try again.", 'bot-bubble');
+            appendBubble(`Error reaching backend: ${error.message}. Check your browser console log for deeper details.`, 'bot-bubble', false);
+            console.error("Chatbot Fetch Error:", error);
         }
     });
 
-    function appendBubble(text, className) {
+    function appendBubble(text, className, shouldFormat) {
         const div = document.createElement('div');
         div.className = `chat-bubble ${className}`;
-        div.innerHTML = `<p>${text}</p>`;
+        div.innerHTML = `<p>${shouldFormat ? formatAIResponse(text) : text}</p>`;
         chatBody.appendChild(div);
         chatBody.scrollTop = chatBody.scrollHeight;
     }
