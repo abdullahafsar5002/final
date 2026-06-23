@@ -1,6 +1,6 @@
 // api/chat.js
 export default async function handler(req, res) {
-    // Allows your frontend to talk to this backend file safely
+    // Enable CORS headers so your frontend can communicate securely
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
@@ -19,11 +19,13 @@ export default async function handler(req, res) {
         const apiKey = process.env.GEMINI_API_KEY;
 
         if (!apiKey) {
-            return res.status(500).json({ reply: "API Key missing in Vercel settings." });
+            return res.status(200).json({ 
+                reply: "⚠️ Backend Config Error: The `GEMINI_API_KEY` is missing in Vercel Environment Variables." 
+            });
         }
 
-        // Send the user message to Google's Gemini AI engine
-        const apiURL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+        // Using the highly stable Gemini 1.5 Flash API endpoint
+        const apiURL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
         
         const response = await fetch(apiURL, {
             method: 'POST',
@@ -32,21 +34,34 @@ export default async function handler(req, res) {
                 contents: [{
                     parts: [{
                         text: `You are the official helpful AI assistant for the Toruk Makto Golf League. 
-                               Be professional, concise, and polite. 
-                               Help users understand schedules, rosters, and registration details.
+                               Keep your responses friendly, concise, and focused on golf or league support.
                                
-                               User says: ${message}`
+                               User question: ${message}`
                     }]
                 }]
             })
         });
 
         const data = await response.json();
-        const aiReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "I couldn't quite process that. Can you rephrase your question?";
+
+        // Catch errors sent back directly from Google's servers
+        if (data.error) {
+            return res.status(200).json({ 
+                reply: `🛑 Google AI API Error: ${data.error.message} (Code: ${data.error.code})` 
+            });
+        }
+
+        const aiReply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        
+        if (!aiReply) {
+            return res.status(200).json({ 
+                reply: "Empty response received from Google AI. Please try rephrasing your sentence." 
+            });
+        }
         
         return res.status(200).json({ reply: aiReply });
 
     } catch (error) {
-        return res.status(500).json({ reply: "Server connection issue. Please try again." });
+        return res.status(500).json({ reply: `❌ Server Crash Error: ${error.message}` });
     }
 }
