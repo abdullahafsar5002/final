@@ -1910,99 +1910,61 @@ footer {
     font-family: monospace;
 }
 /* ==========================================================================
-   FLEXIBLE CHATBOT POSITIONING UTILITY
+   FULLY DRAGGABLE CHATBOT WIDGET INTERFACE
    ========================================================================== */
-:root {
-    /* 1. CHANGE SIDE: Set to 'right' or 'left' depending on where your ads are */
-    --chat-side: right; 
-    
-    /* 2. CHANGE HORIZONTAL DISTANCE: Distance from the edge of the screen */
-    --chat-distance-x: 25px; 
-    
-    /* 3. CHANGE VERTICAL POSITION: Raise this if a bottom ad banner is blocking it */
-    --chat-base-bottom: 20px; 
-    
-    /* 4. SCROLL BUTTON OFFSET: Room reserved for your scroll-to-top button (approx 65px) */
-    --scroll-button-offset: 65px; 
-}
 
 /* Floating Chat Button Trigger */
 .chat-toggle-btn {
     position: fixed;
-    /* Automatically calculates height so it sits cleanly ABOVE the scroll-to-top button */
-    bottom: calc(var(--chat-base-bottom) + var(--scroll-button-offset));
-    
-    /* Assigns left or right alignment dynamically based on variables */
-    right: var(--chat-distance-x);
-    left: auto;
-    
+    bottom: 85px; /* Default starting height setup safe from standard scroll buttons */
+    right: 25px;  /* Default starting right side layout placement */
     width: 56px;
     height: 56px;
     background: linear-gradient(135deg, #b89742, #0c4b31);
     color: #fff;
     border: none;
     border-radius: 50%;
-    cursor: pointer;
+    cursor: grab; /* Shows hand grab utility icon to user */
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     z-index: 9999;
-    transition: transform 0.2s, bottom 0.3s ease;
+    touch-action: none; /* Prevents mobile browser from intercepting actions */
+    transition: transform 0.2s, box-shadow 0.2s;
 }
-
-/* Smart Override: If you want the chatbot completely on the left side to avoid all right-side ads */
-@supports (top: max(1px)) {
-    :root:has([data-chat-position="left"]) {
-        --chat-side: left;
-    }
-}
-/* If you manually change --chat-side to left above, this handles it cleanly */
-.chat-toggle-btn[style*="left"], 
-html[dir="rtl"] .chat-toggle-btn {
-    /* Fallback if changed manually */
+.chat-toggle-btn:active {
+    cursor: grabbing;
+    transform: scale(0.95);
 }
 
 /* Main Chat Window Panel */
 .chat-window-container {
     position: fixed;
-    /* Opens directly above the floating button */
-    bottom: calc(var(--chat-base-bottom) + var(--scroll-button-offset) + 65px);
-    right: var(--chat-distance-x);
+    /* Default starting placement coordinates matching the button */
+    bottom: 155px;
+    right: 25px;
     
     width: 350px;
     max-width: calc(100vw - 40px);
-    height: 450px;
+    height: 420px;
     max-height: 60vh;
     background: #fff;
     border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
     border: 1px solid #e2e8f0;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     z-index: 9998;
     opacity: 0;
-    transform: translateY(10px);
     visibility: hidden;
-    transition: all 0.25s ease;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
 .chat-window-container.open {
     opacity: 1;
-    transform: translateY(0);
     visibility: visible;
-}
-
-/* --- QUICK LEFT SIDE SWITCH OVERRIDE --- */
-/* If you want to move the entire setup to the left, apply these rules or change variables */
-.chat-layout-left .chat-toggle-btn {
-    right: auto;
-    left: var(--chat-distance-x);
-}
-.chat-layout-left .chat-window-container {
-    right: auto;
-    left: var(--chat-distance-x);
 }
 
 /* Header styling */
@@ -2038,5 +2000,4 @@ html[dir="rtl"] .chat-toggle-btn {
 .chat-input-area { padding: 10px; background: #fff; border-top: 1px solid #e2e8f0; }
 .chat-input-area form { display: flex; gap: 8px; }
 .chat-input-area input { flex: 1; padding: 8px 14px; border: 1px solid #cbd5e1; border-radius: 20px; outline: none; font-size: 0.9rem; }
-.chat-send-submit { background: #0c4b31; color: #fff; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
-.chat-send-submit:hover { background: #b89742; }
+.chat-send-submit { background: #0c4b31; color: #fff; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
