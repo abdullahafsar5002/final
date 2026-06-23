@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Gallery - Toruk Makto</title>
+     <!-- This line adds your logo to the browser tab -->
+    <link rel="icon" type="image/jpeg" href="logo toruk.png">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="container navbar">
+            <div class="brand-wrapper">
+                <img class="nav-logo-img" src="logo toruk.png" alt="Toruk Makto Logo">
+                <label class="logo-text">Toruk <span>Makto</span></label>
+            </div>
+            
+            <!-- Modern Premium Toggle Button -->
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span class="hamburger-bar"></span>
+                <span class="hamburger-bar"></span>
+                <span class="hamburger-bar"></span>
+            </button>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="leadership.html">Leadership</a></li>
+                <li><a href="teams.html">Teams</a></li>
+                <li><a href="standings.html">Standings</a></li>
+                <li><a href="partners.html">Partners</a></li>
+                <li><a href="gallery.html">Photo Gallery</a></li>
+                <li><a href="faq.html">FAQ</a></li>     
+            </ul>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <div class="container">
+            <a href="index.html">Home</a> / Photo Gallery
+        </div>
+    </div>
+
+    <main class="section">
+        <div class="container">
+            <h2 class="section-title">Tournament Highlights</h2>
+
+            <div class="gallery-filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="tournament">Tournament</button>
+                <button class="filter-btn" data-filter="teams">Teams</button>
+                <button class="filter-btn" data-filter="events">Events</button>
+                <button class="filter-btn" data-filter="friends">Friends</button>
+            </div>
+
+            <div class="gallery-grid">
+                <!-- Tournament Photos -->
+                <div class="gallery-item" data-category="tournament">
+                    <img src="images/1.jpg" alt="Tournament Moment">
+                    <div class="gallery-overlay">
+                        <h4>Tournament Day</h4>
+                        <p>Main Finals - DAC&GC</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="tournament">
+                    <img src="images/2.jpg" alt="Fairway">
+                    <div class="gallery-overlay">
+                        <h4>Championship Course</h4>
+                        <p>Premium Fairway Setup</p>
+                    </div>
+                </div>
+
+                <!-- Friends Photos -->
+                <div class="gallery-item" data-category="friends">            
+                    <img src="images/a.jpeg" alt="team">
+                    <div class="gallery-overlay">   
+                        <h4>Team Bonding</h4>
+                        <p>Pre-Tournament Gathering</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="friends">
+                    <img src="images/b.jpeg" alt="team">
+                    <div class="gallery-overlay">
+                        <h4>Friendship Moment</h4>
+                        <p>Team Building Activity</p>               
+                    </div>
+                </div>
+                 <!-- Teams Photos -->
+                 <div class="gallery-item" data-category="teams">            
+                    <img src="images/18.jpg" alt="Team Group">
+                    <div class="gallery-overlay">
+                        <h4>Team Spirit</h4>
+                        <p>Franchise Group Photo</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="teams">            
+                    <img src="images/19.jpg" alt="Team Group">
+                    <div class="gallery-overlay">
+                        <h4>Team Spirit</h4>
+                        <p>Franchise Group Photo</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="teams">            
+                    <img src="images/20.jpg" alt="Team Group">
+                    <div class="gallery-overlay">
+                        <h4>Team Spirit</h4>
+                        <p>Franchise Group Photo</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="teams">            
+                    <img src="images/21.jpg" alt="Team Group">
+                    <div class="gallery-overlay">
+                        <h4>Team Spirit</h4>
+                        <p>Franchise Group Photo</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="teams">            
+                    <img src="images/22.jpg" alt="Team Group">
+                    <div class="gallery-overlay">
+                        <h4>Team Spirit</h4>
+                        <p>Franchise Group Photo</p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-category="teams">            
+                    <img src="images/23.jpg" alt="Team Group">
+                    <div class="gallery-overlay">
+                        <h4>Team Spirit</h4>
+                        <p>Franchise Group Photo</p>
+                    </div>
+                </div>
+
+                <!-- Events Photos -->
+                <div class="gallery-item" data-category="events">
+                    <img src="images/5.jpg" alt="Awards">
+                    <div class="gallery-overlay">
+                        <h4>Award Ceremony</h4>
+                        <p>Champions Recognition</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-category="events">
+                    <img src="images/6.jpg" alt="Networking">
+                    <div class="gallery-overlay">
+                        <h4>Networking Event</h4>
+                        <p>Corporate Connections</p>
+                    </div>
+                </div>
+
+                <!-- Tournament Photos -->
+                <div class="gallery-item" data-category="tournament">
+                    <img src="images/7.jpg" alt="Sunrise Golf">
+                    <div class="gallery-overlay">
+                        <h4>Morning Round</h4>
+                        <p>Early Tournament Action</p>
+                    </div>
+                </div>
+
+                <!-- Teams Photos -->
+                <div class="gallery-item" data-category="teams">
+                    <img src="images/8.jpg" alt="Victory">
+                    <div class="gallery-overlay">
+                        <h4>Victory Moment</h4>
+                        <p>Winning Team Celebration</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-col">
+                <h4>Toruk Makto Golf League</h4>
+                <p>The premier commercial structural framework developing competitive corporate golf environments across Pakistan.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Secretarial Headquarters</h4>
+                <p>Karachi Office Space,<br>Sindh, Pakistan.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Digital Hub</h4>
+                <p>Explore resources, live sheets, and tournament archives online at:</p>
+                <p style="margin-top: 0.5rem;"><a href="http://www.torukmaktoleague.com/" style="color: var(--accent-color); font-weight:600;">www.torukmaktoleague.com</a></p>
+            </div>
+            <div class="footer-col">
+                <h4>Connect With Us</h4>
+                <p>Stay updated with our official live tournament coverage & media announcements:</p>
+                <div class="social-links-wrapper">
+                    <a href="https://www.facebook.com/TorukMaktoGolfLeague/" class="social-btn" target="_blank">Facebook</a>
+                    <a href="https://www.instagram.com/torukmaktoleague" class="social-btn" target="_blank">Instagram</a>
+                </div>
+            </div>   
+        </div>
+        <div class="footer-bottom">
+            <p class="footer-credit">Designed & Built by Abdullah Afsar</p>
+            <p>&copy; 2026 Toruk Makto Pakistan's First Golf League. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <div id="designer-toast" class="designer-toast-card">
+        <div class="toast-left-border"></div>
+        <svg class="toast-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+        </svg>
+        <div class="toast-text">Designed & Built by <span class="toast-highlight">Abdullah Afsar</span></div>
+        <div style="flex-grow: 1;"></div>
+        <button class="toast-close-btn" onclick="dismissDesignerToast()" aria-label="Dismiss notification">✕</button>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const filter = this.getAttribute('data-filter');
+                
+                // Update active button
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Filter items
+                document.querySelectorAll('.gallery-item').forEach(item => {
+                    if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                        item.style.display = 'block';
+                        item.style.animation = 'fadeIn 0.3s ease';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

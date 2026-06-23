@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact & Registration - Toruk Makto</title>
+     <!-- This line adds your logo to the browser tab -->
+    <link rel="icon" type="image/jpeg" href="logo toruk.png">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="container navbar">
+            <div class="brand-wrapper">
+                <img class="nav-logo-img" src="logo toruk.png" alt="Toruk Makto Logo">
+                <label class="logo-text">Toruk <span>Makto</span></label>
+            </div>
+            
+            <!-- Modern Premium Toggle Button -->
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span class="hamburger-bar"></span>
+                <span class="hamburger-bar"></span>
+                <span class="hamburger-bar"></span>
+            </button>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="leadership.html">Leadership</a></li>
+                <li><a href="teams.html">Teams</a></li>
+                <li><a href="standings.html">Standings</a></li>
+                <li><a href="partners.html">Partners</a></li>
+                <li><a href="gallery.html">Photo Gallery</a></li>
+                <li><a href="faq.html">FAQ</a></li>     
+            </ul>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <div class="container">
+            <a href="index.html">Home</a> / Contact & Registration
+        </div>
+    </div>
+
+    <main class="section">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            
+            <div class="contact-wrapper">
+                <div class="contact-form">
+                    <h3>Team Registration & Inquiries</h3>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Full Name *</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number *</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="teamName">Team/Company Name *</label>
+                            <input type="text" id="teamName" name="teamName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inquiryType">Inquiry Type *</label>
+                            <select id="inquiryType" name="inquiryType" required>
+                                <option value="">Select an option</option>
+                                <option value="team-registration">Team Registration</option>
+                                <option value="sponsorship">Sponsorship Inquiry</option>
+                                <option value="media">Media Partnership</option>
+                                <option value="venue">Venue Partnership</option>
+                                <option value="general">General Inquiry</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">Message *</label>
+                            <textarea id="message" name="message" rows="6" required></textarea>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Send Inquiry</button>
+                    </form>
+                    <div id="formMessage" style="margin-top: 1rem; display: none;"></div>
+                </div>
+
+                <div class="contact-info">
+                    <h3>Contact Information</h3>
+                    <div class="info-block">
+                        <h4>📍 Address</h4>
+                        <p>Karachi Office Space<br>Sindh, Pakistan</p>
+                    </div>
+                    <div class="info-block">
+                        <h4>📧 Email</h4>
+                        <p><a href="mailto:info@torukmaktoleague.com">info@torukmaktoleague.com</a></p>
+                    </div>
+                    <div class="info-block">
+                        <h4>🌐 Website</h4>
+                        <p><a href="http://www.torukmaktoleague.com/" target="_blank">www.torukmaktoleague.com</a></p>
+                    </div>
+                    <div class="info-block">
+                        <h4>🔗 Social Media</h4>
+                        <div class="social-links-wrapper">
+                            <a href="https://www.facebook.com/TorukMaktoGolfLeague/" class="social-btn" target="_blank">Facebook</a>
+                            <a href="https://www.instagram.com/torukmaktoleague" class="social-btn" target="_blank">Instagram</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-col">
+                <h4>Toruk Makto Golf League</h4>
+                <p>The premier commercial structural framework developing competitive corporate golf environments across Pakistan.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Secretarial Headquarters</h4>
+                <p>Karachi Office Space,<br>Sindh, Pakistan.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Digital Hub</h4>
+                <p>Explore resources, live sheets, and tournament archives online at:</p>
+                <p style="margin-top: 0.5rem;"><a href="http://www.torukmaktoleague.com/" style="color: var(--accent-color); font-weight:600;">www.torukmaktoleague.com</a></p>
+            </div>
+            <div class="footer-col">
+                <h4>Connect With Us</h4>
+                <p>Stay updated with our official live tournament coverage & media announcements:</p>
+                <div class="social-links-wrapper">
+                    <a href="https://www.facebook.com/TorukMaktoGolfLeague/" class="social-btn" target="_blank">Facebook</a>
+                    <a href="https://www.instagram.com/torukmaktoleague" class="social-btn" target="_blank">Instagram</a>
+                </div>
+            </div>   
+        </div>
+        <div class="footer-bottom">
+            <p class="footer-credit">Designed & Built by Abdullah Afsar</p>
+            <p>&copy; 2026 Toruk Makto Pakistan's First Golf League. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <div id="designer-toast" class="designer-toast-card">
+        <div class="toast-left-border"></div>
+        <svg class="toast-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+        </svg>
+        <div class="toast-text">Designed & Built by <span class="toast-highlight">Abdullah Afsar</span></div>
+        <div style="flex-grow: 1;"></div>
+        <button class="toast-close-btn" onclick="dismissDesignerToast()" aria-label="Dismiss notification">✕</button>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formMessage = document.getElementById('formMessage');
+            formMessage.textContent = '✓ Thank you for your inquiry! We will get back to you shortly.';
+            formMessage.style.color = 'var(--accent-color)';
+            formMessage.style.display = 'block';
+            this.reset();
+            setTimeout(() => formMessage.style.display = 'none', 4000);
+        });
+    </script>
+</body>
+</html>
