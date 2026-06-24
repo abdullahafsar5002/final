@@ -350,3 +350,72 @@ document.addEventListener('DOMContentLoaded', () => {
         chatBody.scrollTop = chatBody.scrollHeight;
     }
 });
+// --- DYNAMIC MEDIA GALLERY ENGINE ---
+document.addEventListener('DOMContentLoaded', () => {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    const lightbox = document.getElementById('galleryLightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxClose = document.querySelector('.lightbox-close');
+
+    // 1. FILTER FUNCTIONALITY
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Manage Active Button States
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            const filterValue = button.getAttribute('data-filter');
+
+            galleryItems.forEach(item => {
+                const itemCategory = item.getAttribute('data-category');
+                
+                if (filterValue === 'all' || itemCategory === filterValue) {
+                    item.style.display = 'block';
+                    // Trigger simple browser recalculation for clean entry fades
+                    setTimeout(() => { item.style.opacity = '1'; item.style.transform = 'scale(1)'; }, 10);
+                } else {
+                    item.style.opacity = '0';
+                    item.style.transform = 'scale(0.9)';
+                    setTimeout(() => { item.style.display = 'none'; }, 300); // Wait for transition out
+                }
+            });
+        });
+    });
+
+    // 2. LIGHTBOX POP-UP FUNCTIONALITY
+    galleryItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const imgSrc = item.querySelector('img').getAttribute('src');
+            const imgAlt = item.querySelector('img').getAttribute('alt');
+            
+            lightboxImg.setAttribute('src', imgSrc);
+            lightboxImg.setAttribute('alt', imgAlt);
+            
+            lightbox.classList.add('show');
+        });
+    });
+
+    // Close Lightbox clicking the 'X'
+    lightboxClose.addEventListener('click', closeLightbox);
+
+    // Close Lightbox safely when clicking outside the image container
+    lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+            closeLightbox();
+        }
+    });
+
+    // Escape Key Safeguard to close layout overlays smoothly
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lightbox.classList.contains('show')) {
+            closeLightbox();
+        }
+    });
+
+    function closeLightbox() {
+        lightbox.classList.remove('show');
+        // Clean out image source on clear state to avoid flashes next time it opens
+        setTimeout(() => { lightboxImg.setAttribute('src', ''); }, 300);
+    }
+});
