@@ -115,6 +115,50 @@
             <p>&copy; 2026 Toruk Makto Pakistan's First Golf League. All Rights Reserved.</p>
         </div>
     </footer>
+      <!-- Floating Chat Button Trigger -->
+<button class="chat-toggle-btn" id="chatToggle" aria-label="Open Chat">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+</button>
+
+<!-- Hidden Chat Box Window -->
+<div class="chat-window-container" id="chatWindow">
+    <div class="chat-header-bar">
+        <div class="chat-profile-status">
+            <div class="status-green-dot"></div>
+            <span class="chat-bot-title">League Assistant</span>
+        </div>
+        <button class="chat-close-x" id="chatClose">&times;</button>
+    </div>
+    
+    <div class="chat-messages-body" id="chatBody">
+        <div class="chat-bubble bot-bubble">
+            <p>Hi! Welcome to the Toruk Makto Golf League. How can I help you today?</p>
+        </div>
+    </div>
+    
+    <div class="chat-input-area">
+        <form id="chatForm">
+            <input type="text" id="chatInput" placeholder="Ask a question..." autocomplete="off" required>
+            <button type="submit" class="chat-send-submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+        </form>
+    </div>
+</div>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" title="Back to top">↑</button>
+
+    <div id="designer-toast" class="designer-toast-card">
+        <div class="toast-left-border"></div>
+        <svg class="toast-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+        </svg>
+        <div class="toast-text">Designed & Built by <span class="toast-highlight">Abdullah Afsar</span></div>
+        <div style="flex-grow: 1;"></div>
+        <button class="toast-close-btn" onclick="dismissDesignerToast()" aria-label="Dismiss notification">✕</button>
+    </div>
 
     <div id="designer-toast" class="designer-toast-card">
         <div class="toast-left-border"></div>
