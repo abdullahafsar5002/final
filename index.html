@@ -80,57 +80,71 @@
             </div>
         </div>
     </section>
-    <section class="gallery-section">
+   <!-- Media Gallery Section -->
+<section class="gallery-section">
     <div class="gallery-container">
         <h2 class="gallery-title">League Media Gallery</h2>
         <p class="gallery-subtitle">Moments from the green, tournaments, and official events</p>
 
+        <!-- Tailored Category Filters -->
         <div class="gallery-filters">
             <button class="filter-btn active" data-filter="all">All Photos</button>
             <button class="filter-btn" data-filter="tournaments">Tournaments</button>
-            <button class="filter-btn" data-filter="events">Events</button>
-            <button class="filter-btn" data-filter="players">Players</button>
+            <button class="filter-btn" data-filter="officials">Officials & Coverage</button>
+            <button class="filter-btn" data-filter="rosters">Team Rosters</button>
         </div>
 
+        <!-- Gallery Grid -->
         <div class="gallery-grid">
+            
+            <!-- ====== TOURNAMENTS CATEGORY ====== -->
             <div class="gallery-item" data-category="tournaments">
-                <img src="https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&w=600&q=80" alt="Tournament Tee Off">
-                <div class="item-overlay"><span>View Image</span></div>
-            </div>
-
-            <div class="gallery-item" data-category="players">
-                <img src="https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=600&q=80" alt="Player Swing">
-                <div class="item-overlay"><span>View Image</span></div>
-            </div>
-
-            <div class="gallery-item" data-category="events">
-                <img src="https://images.unsplash.com/photo-1593111774240-d529f12cf4bb?auto=format&fit=crop&w=600&q=80" alt="Award Ceremony">
-                <div class="item-overlay"><span>View Image</span></div>
+                <!-- REPLACE THE SRC BELOW WITH YOUR TOURNAMENT PHOTO -->
+                <img src="images/tournament_scorecard.jpg" alt="Tournament Scorecard">
+                <div class="item-overlay"><span>View Scorecard</span></div>
             </div>
 
             <div class="gallery-item" data-category="tournaments">
-                <img src="https://images.unsplash.com/photo-1627645835237-0743e52b991f?auto=format&fit=crop&w=600&q=80" alt="Putting Green Action">
-                <div class="item-overlay"><span>View Image</span></div>
+                <!-- REPLACE THE SRC BELOW WITH YOUR TOURNAMENT PHOTO -->
+                <img src="images/tournament_play.jpg" alt="Match Play on the Green">
+                <div class="item-overlay"><span>View Action</span></div>
             </div>
 
-            <div class="gallery-item" data-category="players">
-                <img src="https://images.unsplash.com/photo-1592919505780-303950717480?auto=format&fit=crop&w=600&q=80" alt="Golf Club Close-up">
-                <div class="item-overlay"><span>View Image</span></div>
+            <!-- ====== OFFICIALS & COVERAGE CATEGORY ====== -->
+            <div class="gallery-item" data-category="officials">
+                <!-- REPLACE THE SRC BELOW WITH YOUR MEDIA/OFFICIALS PHOTO -->
+                <img src="images/league_officials.jpg" alt="League Officials Media Coverage">
+                <div class="item-overlay"><span>View Media Coverage</span></div>
             </div>
 
-            <div class="gallery-item" data-category="events">
-                <img src="https://images.unsplash.com/photo-1516738901171-8eb4fc13bd20?auto=format&fit=crop&w=600&q=80" alt="League Gathering">
-                <div class="item-overlay"><span>View Image</span></div>
+            <div class="gallery-item" data-category="officials">
+                <!-- REPLACE THE SRC BELOW WITH YOUR MEDIA/OFFICIALS PHOTO -->
+                <img src="images/event_highlights.jpg" alt="Official League Gathering">
+                <div class="item-overlay"><span>View Highlights</span></div>
             </div>
+
+            <!-- ====== TEAM ROSTERS CATEGORY ====== -->
+            <div class="gallery-item" data-category="rosters">
+                <!-- REPLACE THE SRC BELOW WITH YOUR ROSTER PHOTO -->
+                <img src="images/team_roster_1.jpg" alt="Team Profile Card">
+                <div class="item-overlay"><span>View Team Profile</span></div>
+            </div>
+
+            <div class="gallery-item" data-category="rosters">
+                <!-- REPLACE THE SRC BELOW WITH YOUR ROSTER PHOTO -->
+                <img src="images/team_roster_2.jpg" alt="Player Lineup Profile">
+                <div class="item-overlay"><span>View Profile</span></div>
+            </div>
+
         </div>
     </div>
 </section>
 
+<!-- Lightbox Pop-up Modal -->
 <div id="galleryLightbox" class="lightbox-modal">
     <span class="lightbox-close">&times;</span>
     <img class="lightbox-content" id="lightboxImg" src="" alt="Expanded View">
 </div>
-
     <!-- Testimonials Section -->
     <section class="testimonials-section">
         <div class="container">
