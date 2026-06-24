@@ -2001,3 +2001,178 @@ footer {
 .chat-input-area form { display: flex; gap: 8px; }
 .chat-input-area input { flex: 1; padding: 8px 14px; border: 1px solid #cbd5e1; border-radius: 20px; outline: none; font-size: 0.9rem; }
 .chat-send-submit { background: #0c4b31; color: #fff; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+/* --- GALLERY STYLES --- */
+.gallery-section {
+    padding: 60px 20px;
+    background-color: #121212; /* Matches premium dark themes */
+    color: #ffffff;
+    font-family: sans-serif;
+}
+
+.gallery-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.gallery-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.gallery-subtitle {
+    text-align: center;
+    color: #aaaaaa;
+    margin-bottom: 40px;
+}
+
+/* Category Filters styling */
+.gallery-filters {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 35px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background: transparent;
+    border: 2px solid #333333;
+    color: #ffffff;
+    padding: 10px 24px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background-color: #ffffff;
+    color: #121212;
+    border-color: #ffffff;
+}
+
+/* Fluid Layout Grid */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+.gallery-item {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    height: 240px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+/* Elegant Hover Effects */
+.item-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.item-overlay span {
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    transform: translateY(10px);
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px);
+}
+
+.gallery-item:hover img {
+    transform: scale(1.08);
+}
+
+.gallery-item:hover .item-overlay {
+    opacity: 1;
+}
+
+.gallery-item:hover .item-overlay span {
+    transform: translateY(0);
+}
+
+/* Lightbox Modal Design Overlay */
+.lightbox-modal {
+    display: none; 
+    position: fixed;
+    z-index: 99999; /* Make sure it rides over your chatbot UI */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.92);
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.lightbox-modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+.lightbox-content {
+    max-width: 85%;
+    max-height: 80vh;
+    border-radius: 6px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+    transform: scale(0.95);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.lightbox-modal.show .lightbox-content {
+    transform: scale(1);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 25px;
+    right: 35px;
+    color: #ffffff;
+    font-size: 45px;
+    font-weight: 300;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.lightbox-close:hover {
+    color: #ff4d4d;
+}
+
+@media (max-width: 480px) {
+    .lightbox-close { top: 15px; right: 20px; font-size: 35px; }
+    .gallery-title { font-size: 2rem; }
+}
